@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
-  title: "Чат-бот Администрации Ленинского района",
-  description: "Чат-бот для ответов на вопросы жителей Ленинского района",
+  title: "Сайт Администрации Ленинского района с чат-ботом",
+  description: "Сайт Администрации Ленинского района с интегрированным чат-ботом",
 };
 
 export default function RootLayout({
@@ -17,18 +17,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={inter.className}>
-        <div className="main-container">
-          <header className="header">
-            <h1>Администрация Ленинского района</h1>
-            <p>Официальный информационный портал</p>
-          </header>
-          <main className="content">
-            {children}
-          </main>
-          <footer className="footer">
-            <p>© 2024 Администрация Ленинского района. Все права защищены.</p>
-          </footer>
-        </div>
+        {children}
       </body>
     </html>
   );

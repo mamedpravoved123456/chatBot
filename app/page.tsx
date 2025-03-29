@@ -1,9 +1,9 @@
-import ChatContainer from './components/ChatContainer';
+import IframeWithChat from './components/IframeWithChat';
 
 export default function Home() {
   return (
     <main>
-      <ChatContainer />
+      <IframeWithChat />
     </main>
   );
 }
