@@ -70,30 +70,25 @@ export default function ChatContainer() {
   // Загрузка начального сообщения от бота
   const fetchInitialMessage = async () => {
     try {
-      // При статическом деплое не можем использовать серверный API
-      // Вместо этого загружаем данные из JSON-файла
-      // Учитываем basePath для продакшен версии
-      const basePath = process.env.NODE_ENV === 'production' ? '/chat-bot-nextjs' : '';
-      const response = await fetch(`${basePath}/data/responses.json`);
-      const data = await response.json();
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: 'INITIAL_MESSAGE' }),
+      });
       
+      const data = await response.json();
       setMessages([{
-        content: "Здравствуйте! Я чат-бот Администрации Ленинского района. Выберите интересующую вас тему:",
+        content: data.response,
         isUser: false
       }]);
       
-      // Устанавливаем топики из загруженного JSON
-      if (data.topicButtons) {
-        setTopics(data.topicButtons);
+      if (data.topics) {
+        setTopics(data.topics);
       }
     } catch (error) {
       console.error('Error fetching initial message:', error);
-      // В случае ошибки загрузки, используем базовый набор тем
-      setTopics([
-        { id: "какие мероприятия в этом месяце?", text: "Мероприятия" },
-        { id: "адрес администрации ленинского района", text: "Адрес" },
-        { id: "телефон администрации", text: "Телефон" }
-      ]);
     }
   };
 

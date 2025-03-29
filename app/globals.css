@@ -16,10 +16,8 @@
 html,
 body {
   max-width: 100vw;
+  overflow-x: hidden;
   height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
   background-color: var(--background-color);
   color: var(--text-color);
   font-family: Arial, Helvetica, sans-serif;
@@ -44,16 +42,41 @@ a {
   }
 }
 
-main {
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
+.main-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Скрываем стили для существующего контейнера, так как они больше не используются */
-.main-container,
-.header,
-.content,
+.header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.header h1 {
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+}
+
+.header p {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 .footer {
-  display: none;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
 }
