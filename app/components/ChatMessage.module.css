@@ -1,0 +1,31 @@
+.message {
+  padding: 10px 15px;
+  margin: 5px 0;
+  border-radius: 10px;
+  max-width: 80%;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.userMessage {
+  background-color: #1982FC;
+  color: white;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.botMessage {
+  background-color: #f1f1f1;
+  color: #333;
+  align-self: flex-start;
+  margin-right: auto;
+}
+
+.botMessage a {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+.botMessage a:hover {
+  text-decoration: none;
+} 
