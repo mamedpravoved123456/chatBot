@@ -13,6 +13,12 @@ interface Request {
   createdAt: string;
 }
 
+// Обновляем интерфейс для ответа
+interface ApiResponse {
+  response: string;
+  topics?: any[]; // Добавляем поле topics как опциональное
+}
+
 // Объект с ответами бота
 const botResponses: BotResponse = {
   "привет": "Здравствуйте! 👋\n\nЯ чат-бот Администрации Ленинского района. Я могу помочь вам с информацией о мероприятиях, контактах, услугах и многом другом.\n\nВыберите интересующую вас тему или задайте вопрос:",
@@ -597,23 +603,15 @@ export async function POST(request: Request) {
     return NextResponse.json({
       response: botResponses["привет"],
       topics: JSON.parse(generateTopicButtons())
-    });
+    } as ApiResponse);
   }
   
   // Обрабатываем сообщение пользователя
   const botResponse = getBotResponse(message);
   
-  // Проверяем, является ли ответ приветственным сообщением
-  const normalizedMessage = message.toLowerCase().trim();
-  const isGreeting = normalizedMessage === "привет" || 
-                     normalizedMessage === "здравствуйте" || 
-                     normalizedMessage === "добрый день" || 
-                     normalizedMessage === "доброе утро" || 
-                     normalizedMessage === "добрый вечер";
-  
   // Возвращаем ответ
   return NextResponse.json({ 
     response: botResponse,
-    topics: isGreeting ? JSON.parse(generateTopicButtons()) : undefined
-  });
+    topics: botResponse === botResponses["привет"] ? JSON.parse(generateTopicButtons()) : undefined
+  } as ApiResponse);
 }
