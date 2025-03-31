@@ -567,113 +567,25 @@ function getBotResponse(userMessage: string): string {
     return botResponses["привет"];
   }
 
-  // Проверяем создание заявок
-  if (normalizedMessage === "создать заявку") {
-    return botResponses["создать заявку"];
+  // Проверяем новые команды
+  const commands = [
+    "новости района",
+    "транспорт",
+    "расписание служб",
+    "правила подачи документов"
+  ];
+
+  if (commands.includes(normalizedMessage)) {
+    return botResponses[normalizedMessage];
   }
 
-  if (normalizedMessage === "заявка жкх") {
-    return botResponses["заявка жкх"];
+  // Проверяем остальные сообщения
+  if (botResponses[normalizedMessage]) {
+    return botResponses[normalizedMessage];
   }
 
-  if (normalizedMessage === "заявка благоустройство") {
-    return botResponses["заявка благоустройство"];
-  }
-
-  if (normalizedMessage === "заявка социальные вопросы") {
-    return botResponses["заявка социальные вопросы"];
-  }
-
-  if (normalizedMessage === "заявка документы") {
-    return botResponses["заявка документы"];
-  }
-
-  if (normalizedMessage === "мои заявки") {
-    return botResponses["мои заявки"];
-  }
-
-  if (normalizedMessage === "статус заявки") {
-    return botResponses["статус заявки"];
-  }
-
-  // Добавляем обработку новых команд
-  if (normalizedMessage === "новости района") {
-    return botResponses["новости района"];
-  }
-
-  if (normalizedMessage === "транспорт") {
-    return botResponses["транспорт"];
-  }
-
-  if (normalizedMessage === "расписание служб") {
-    return botResponses["расписание служб"];
-  }
-
-  if (normalizedMessage === "правила подачи документов") {
-    return botResponses["правила подачи документов"];
-  }
-
-  const synonyms: { [key: string]: string[] } = {
-    "мероприятия": ["мероприятия", "события", "афиша", "куда сходить", "что проходит", "фестиваль", "концерт", "выставка", "праздник"],
-    "адрес": ["адрес", "где находится", "расположение", "местонахождение", "найти", "добраться", "как найти"],
-    "телефон": ["телефон", "номер", "связаться", "позвонить", "дозвониться", "контакты", "как связаться"],
-    "график работы": ["график", "время работы", "часы работы", "когда работает", "режим работы", "работает ли", "открыто"],
-    "добраться": ["добраться", "как доехать", "маршрут", "проехать", "транспорт", "автобус", "троллейбус", "метро"],
-    "отопление": ["отопление", "нет тепла", "холодно в квартире", "батареи", "отопление не работает", "холодно дома"],
-    "дорога": ["дорога", "яма", "плохая дорога", "разбитая дорога", "асфальт", "ремонт дороги", "ямы на дороге"],
-    "вопросы": ["вопросы", "часто задаваемые", "частые вопросы", "часто спрашивают", "часто интересуются"],
-    "социальные": ["социальные", "соцпрограммы", "социальная помощь", "помощь", "поддержка", "льготы"],
-    "экстренные": ["экстренные", "службы", "спасатели", "пожарные", "полиция", "скорая", "аварийная"],
-    "обращения": ["обращения", "жалоба", "заявление", "подать обращение", "написать обращение"],
-    "документы": ["документы", "справки", "получить справку", "нужна справка", "документы и справки"]
-  };
-
-  function replaceSynonyms(text: string): string {
-    let result = text;
-    for (const key in synonyms) {
-      synonyms[key].forEach(synonym => {
-        result = result.replace(new RegExp(synonym, 'g'), key);
-      });
-    }
-    return result;
-  }
-
-  const processedMessage = replaceSynonyms(normalizedMessage);
-
-  // Проверяем наличие ключевых слов в сообщении
-  if (processedMessage.includes("мероприятия")) {
-    return botResponses["какие мероприятия в этом месяце?"];
-  } else if (processedMessage.includes("адрес")) {
-    return botResponses["адрес администрации ленинского района"];
-  } else if (processedMessage.includes("телефон")) {
-    return botResponses["телефон администрации"];
-  } else if (processedMessage.includes("график работы")) {
-    return botResponses["график работы администрации"];
-  } else if (processedMessage.includes("добраться") || processedMessage.includes("местонахождение")) {
-    return botResponses["как добраться до администрации"];
-  } else if (processedMessage.includes("отопление")) {
-    return botResponses["сообщить о проблеме с отоплением"];
-  } else if (processedMessage.includes("дорога")) {
-    return botResponses["сообщить о яме на дороге"];
-  } else if (processedMessage.includes("вопросы")) {
-    return botResponses["часто задаваемые вопросы"];
-  } else if (processedMessage.includes("социальные")) {
-    return botResponses["социальные программы"];
-  } else if (processedMessage.includes("экстренные")) {
-    return botResponses["экстренные службы"];
-  } else if (processedMessage.includes("обращения")) {
-    return botResponses["работа с обращениями"];
-  } else if (processedMessage.includes("документы")) {
-    return botResponses["документы и справки"];
-  }
-
-  // Проверяем точное совпадение с ключами
-  if (botResponses[processedMessage]) {
-    return botResponses[processedMessage];
-  }
-
-  // Если сообщение не распознано, возвращаем стандартный ответ
-  return botResponses["default"];
+  // Если сообщение не найдено
+  return `Извините, я не смог найти ответ на ваш вопрос. Пожалуйста, попробуйте переформулировать вопрос или выберите тему из списка ниже.`;
 }
 
 export async function POST(request: Request) {
