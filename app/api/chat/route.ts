@@ -5,7 +5,7 @@ interface BotResponse {
 }
 
 // Интерфейс для заявки
-interface Request {
+interface TicketRequest {
   id: string;
   type: string;
   description: string;
