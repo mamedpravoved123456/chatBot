@@ -15,10 +15,18 @@ interface Topic {
   text: string;
 }
 
+interface Department {
+  id: string;
+  text: string;
+}
+
 export default function ChatContainer() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [email, setEmail] = useState('');
   const [topics, setTopics] = useState<Topic[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [isWritingAppeal, setIsWritingAppeal] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [containerWidth, setContainerWidth] = useState(400);
   const [containerHeight, setContainerHeight] = useState(600);
@@ -96,7 +104,7 @@ export default function ChatContainer() {
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
     
-    // Добавляем сообщение пользователя
+    // Добавляем сообщение пользователя в чат
     setMessages(prev => [...prev, { content: message, isUser: true }]);
     setInput('');
     
@@ -105,14 +113,36 @@ export default function ChatContainer() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'is-writing-appeal': isWritingAppeal.toString()
         },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ 
+          message,
+          email: isWritingAppeal ? email : undefined
+        }),
       });
       
       const data = await response.json();
       
-      // Добавляем ответ бота
+      // Добавляем ответ бота в чат
       setMessages(prev => [...prev, { content: data.response, isUser: false }]);
+      
+      // Обновляем состояние кнопок тем
+      if (data.topics) {
+        setTopics(data.topics);
+        setDepartments([]);
+        setIsWritingAppeal(false);
+      }
+      
+      // Обновляем состояние кнопок отделов
+      if (data.departments) {
+        setDepartments(data.departments);
+        setTopics([]);
+      }
+      
+      // Обновляем состояние написания обращения
+      if (data.isWritingAppeal) {
+        setIsWritingAppeal(true);
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       setMessages(prev => [...prev, { 
@@ -125,6 +155,11 @@ export default function ChatContainer() {
   // Обработка нажатия кнопки темы
   const handleTopicClick = (topic: string) => {
     handleSendMessage(topic);
+  };
+
+  // Обработка нажатия кнопки отдела
+  const handleDepartmentClick = (department: string) => {
+    handleSendMessage(department);
   };
 
   // Обработка нажатия клавиши Enter
@@ -161,6 +196,19 @@ export default function ChatContainer() {
           <ChatMessage key={index} message={msg.content} isUser={msg.isUser} />
         ))}
         
+        {departments.length > 0 && (
+          <div className={styles.topicButtonsContainer}>
+            {departments.map((department) => (
+              <TopicButton 
+                key={department.id} 
+                topic={department.id} 
+                text={department.text} 
+                onClick={handleDepartmentClick} 
+              />
+            ))}
+          </div>
+        )}
+        
         {topics.length > 0 && (
           <div className={styles.topicButtonsContainer}>
             {topics.map((topic) => (
@@ -176,13 +224,25 @@ export default function ChatContainer() {
       </div>
       
       <div className={styles.chatInputContainer}>
+        {isWritingAppeal && (
+          <div className={styles.emailInputContainer}>
+            <input
+              type="email"
+              className={styles.emailInput}
+              placeholder="Введите ваш email для ответа..."
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+        )}
         <input
           type="text"
           className={styles.chatInput}
-          placeholder="Введите ваш вопрос..."
+          placeholder={isWritingAppeal ? "Опишите ваше обращение..." : "Введите ваш вопрос..."}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={handleKeyPress}
+          disabled={isWritingAppeal && !email}
         />
       </div>
       

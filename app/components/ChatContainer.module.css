@@ -68,6 +68,28 @@
   background: linear-gradient(135deg, #ddd 50%, transparent 50%);
 }
 
+.emailInputContainer {
+  margin-bottom: 10px;
+}
+
+.emailInput {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+}
+
+.emailInput:focus {
+  border-color: #007bff;
+}
+
+.chatInput:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .chatContainer {
     position: fixed;
